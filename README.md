@@ -259,3 +259,22 @@ Finalize multipart upload
 Abort multipart upload
 
 ---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Docker & Docker Compose
+- Git
+
+### Run the Project
+
+```bash
+docker compose up --build --watch
+```
+
+This starts:
+- **Client**: React app on `http://localhost` (port 80)
+- **Redis**: You can access Redis Insight on `localhost:8001`
+- **MinIO**: S3 console os accessible on `http://localhost:9001`
+
