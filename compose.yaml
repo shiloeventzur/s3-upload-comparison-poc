@@ -45,6 +45,8 @@ services:
           action: rebuild
         - path: ./write/Dockerfile
           action: rebuild
+    environment:
+      BUCKET_NAME: uploads
     depends_on:
       - redis
       - minio
