@@ -4,7 +4,7 @@ const {
   HeadBucketCommand,
 } = require("@aws-sdk/client-s3");
 
-const BUCKET_NAME = "uploads";
+const BUCKET_NAME = process.env.BUCKET_NAME || "uploads";
 
 const s3 = new S3Client({
   endpoint: "http://s3:9000",

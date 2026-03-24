@@ -39,9 +39,11 @@ router.post("/prepare", async (req, res) => {
         })
       );
 
-      // Store metadata in Redis (immutable — never updated by chunk handlers)
-      await redis.set(
+      // Store metadata as RedisJSON document (immutable — never updated by chunk handlers)
+      await redis.call(
+        "JSON.SET",
         `upload:${layerId}:${fileId}`,
+        "$",
         JSON.stringify({ uploadId, s3Key, fileName: file.fileName, totalChunks })
       );
 
@@ -74,8 +76,8 @@ router.post("/:layerId/:fileId", async (req, res) => {
     }
     const buffer = req.files.chunk.data;
 
-    // Fetch upload metadata from Redis (immutable, safe to read concurrently)
-    const raw = await redis.get(`upload:${layerId}:${fileId}`);
+    // Fetch upload metadata via RedisJSON (immutable, safe to read concurrently)
+    const raw = await redis.call("JSON.GET", `upload:${layerId}:${fileId}`);
     if (!raw) {
       return res.status(404).json({ error: "Upload session not found" });
     }
@@ -93,7 +95,7 @@ router.post("/:layerId/:fileId", async (req, res) => {
       })
     );
 
-    // Store ETag in Redis list
+    // Store ETag in Redis list (standard list — not JSON; etags are append-only)
     await redis.rpush(
       `etags:${layerId}:${fileId}`,
       JSON.stringify({ PartNumber: partNumber, ETag })
