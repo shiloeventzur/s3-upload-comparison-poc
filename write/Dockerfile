@@ -12,4 +12,6 @@ COPY ./routes ./routes
 
 COPY ./controllers ./controllers
 
+COPY ./services ./services
+
 CMD [ "npm","run","dev" ]
